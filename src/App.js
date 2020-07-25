@@ -1,52 +1,86 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.css';
-import List from './List';
-import Add from './Add';
-import Edit from './Edit';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  NavLink as Link,
+  useLocation as local
+} from "react-router-dom";
+import Crud from './crud/index';
+import NewsFeed from './newsfeed/index';
+
+const routes = [
+  {
+    path: "/",
+    exact: true,
+    component: Home
+  },
+  {
+    path: "/crud",
+    exact: true,
+    component: Crud
+  },
+  {
+    path: "/newsfeed",
+    exact: true,
+    component: NewsFeed
+  },
+  {
+    path: '*',
+    component: error404,
+  }
+];
+
+function error404() {
+  let locaction = local();
+  return (
+    <div>
+      <h1>erorr 404 !!!</h1>
+      <h3>Not found : { locaction.pathname } !</h3>
+    </div>
+  )
+}
+
+function Home() {
+  return (
+    <div>
+      <h1>Hello...</h1>
+    </div>
+  )
+}
 
 const App = () => {
-  const allUsers = [
-    {id: 1, name: 'risman', age: 27, status: false},
-    {id: 2, name: 'ramli', age: 27, status: true}
-  ];
-  const initUser = {id: null, name: '', age: '', status: false};
-
-  const [init, setInit] = useState(initUser);
-  const [users, setUsers] = useState(allUsers);
-  const [edit, setEdit] = useState(false);
-
-  const handleInput = e => {
-    const value = e.target.name === 'status' ? e.target.checked : e.target.value
-    const name = e.target.name;
-		setInit({ ...init, [name]: value });
-  };
-
-  const addUser = user => {
-    let nextId = users.slice(-1).map(data => data.id);
-    user.id = parseInt(nextId) + 1 || 1;
-    setUsers([ ...users, user ]);
-  }
-
-  const formEdit = user => {
-		setEdit(true);
-		setInit({ id: user.id, name: user.name, age: user.age, status: user.status });
-  }
-
-  const updateUser = (id, updatedUser) => {
-		setEdit(false);
-		setUsers(users.map(user => (user.id === id ? updatedUser : user)));
-	}
-
+  console.log(routes)
   return (
-    <div className="container">
-      <h1>hello...</h1>
-      <List users={users} setUsers={setUsers} formEdit={formEdit}/>
-      {edit ?
-        <Edit setEdit={setEdit} init={init} setInit={setInit} initUser={initUser} handleInput={handleInput} updateUser={updateUser}/>
-      :
-        <Add addUser={addUser} init={init} setInit={setInit} initUser={initUser} handleInput={handleInput}/>
-      }
-    </div>
+    <Router>
+      <div>
+        <ul className="nav nav-pills">
+          <li className="nav-item">
+            <Link exact className="nav-link" to="/">Home</Link>
+          </li>
+          <li className="nav-item">
+            <Link exact className="nav-link" to="/crud">Crud</Link>
+          </li>
+          <li className="nav-item">
+            <Link exact className="nav-link" to="/newsfeed">News Feed</Link>
+          </li>
+        </ul>
+        <hr />
+        <Switch>
+          {routes.map((route, i) => (
+            <Route
+              key={i}
+              path={route.path}
+              exact={route.exact}
+              render={props => (
+                <route.component {...props} routes={route.routes} />
+              )}
+            />
+          ))}
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
