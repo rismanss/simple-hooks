@@ -51,7 +51,6 @@ function Home() {
 }
 
 const App = () => {
-  console.log(routes)
   return (
     <Router>
       <div>
