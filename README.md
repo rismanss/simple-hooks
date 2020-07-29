@@ -9,6 +9,7 @@
   - [useState](https://reactjs.org/docs/hooks-reference.html#usestate)
   - [useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect)
   - [useContext](https://reactjs.org/docs/hooks-reference.html#usecontext)
+  - [useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer)
 
 License
 ----
