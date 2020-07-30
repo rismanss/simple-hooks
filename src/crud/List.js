@@ -1,9 +1,6 @@
-import React from 'react'
+import React from 'react';
 
 const List = props => {
-  const remove = id => {
-    props.setUsers(props.users.filter(user => user.id !== id));
-  };
   return (
     <table className="table table-sm">
       <thead className="table-dark">
@@ -32,7 +29,7 @@ const List = props => {
                 </button>
                 <button
                   className="btn btn-sm btn-outline-dark"
-                  onClick={() => remove(user.id)}
+                  onClick={() => props.deleteUser(user.id)}
                 >
                   Delete
                 </button>

@@ -1,19 +1,23 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
+import { Context } from '../context/provider';
+import {add, remove, update} from '../context/actions';
 import './../App.css';
 import List from './List';
 import Add from './Add';
 import Edit from './Edit';
 
 const Index = () => {
-  const allUsers = [
-    {id: 1, name: 'risman', age: 27, status: false},
-    {id: 2, name: 'ramli', age: 27, status: true}
-  ];
+  const [state, dispatch] = useContext(Context);
+  console.log(state,'...state crud');
+
   const initUser = {id: null, name: '', age: '', status: false};
 
   const [init, setInit] = useState(initUser);
-  const [users, setUsers] = useState(allUsers);
   const [edit, setEdit] = useState(false);
+
+  const deleteUser = (id) => {
+    dispatch(remove(id));
+  }
 
   const handleInput = e => {
     const value = e.target.name === 'status' ? e.target.checked : e.target.value
@@ -22,9 +26,9 @@ const Index = () => {
   };
 
   const addUser = user => {
-    let nextId = users.slice(-1).map(data => data.id);
+    let nextId = state.crud.slice(-1).map(data => data.id);
     user.id = parseInt(nextId) + 1 || 1;
-    setUsers([ ...users, user ]);
+    dispatch(add(user))
   }
 
   const formEdit = user => {
@@ -32,14 +36,14 @@ const Index = () => {
 		setInit({ id: user.id, name: user.name, age: user.age, status: user.status });
   }
 
-  const updateUser = (id, updatedUser) => {
-		setEdit(false);
-		setUsers(users.map(user => (user.id === id ? updatedUser : user)));
+  const updateUser = (id, user) => {
+    setEdit(false);
+    dispatch(update(id, user));
 	}
 
   return (
     <div className="container">
-      <List users={users} setUsers={setUsers} formEdit={formEdit}/>
+      <List users={state.crud} deleteUser={deleteUser} formEdit={formEdit}/>
       {edit ?
         <Edit setEdit={setEdit} init={init} setInit={setInit} initUser={initUser} handleInput={handleInput} updateUser={updateUser}/>
       :

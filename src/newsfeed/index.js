@@ -5,7 +5,7 @@ import { page } from '../context/actions';
 
 const Index = () => {
   const [state, dispatch] = useContext(Context);
-  console.log(state,'...statex');
+  console.log(state,'...state newsfeed');
 
   return (
     <div className="container">

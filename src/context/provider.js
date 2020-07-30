@@ -20,7 +20,10 @@ const Provider = props => {
     newsfeed: {
       page: 1
     },
-    crud: []
+    crud: [
+      {id: 1, name: 'risman', age: 27, status: false},
+      {id: 2, name: 'ramli', age: 27, status: true}
+    ]
   }
   const [state, dispatch] = useReducer(combineReducers({newsfeed, crud}), initialState);
 
