@@ -2,6 +2,14 @@ export const DATA = 'DATA';
 export const PAGE = 'PAGE';
 export const LOAD = 'LOAD';
 export const ERROR = 'ERROR';
+export const ADD = 'ADD';
+
+export const add = (name) => {
+  return {
+    type: ADD,
+    name
+  }
+}
 
 export const fetchData = (data) => {
   return {

@@ -1,20 +1,35 @@
-import React, { createContext, useReducer, useEffect } from 'react';
-import {reducer} from './reducer';
+import React, { createContext, useReducer, useEffect, useMemo } from 'react';
+import {newsfeed, crud} from './reducer';
 import {fetchData, isError, load} from './actions';
 import api from '../newsfeed/api.json';
+
+// function for combine reducer
+const combineReducers = (slices) => (state, action) =>
+  Object.keys(slices).reduce(
+    (acc, prop) => ({
+      ...acc,
+      [prop]: slices[prop](acc[prop], action),
+    }),
+    state
+  );
 
 export const Context = createContext();
 
 const Provider = props => {
   const initialState = {
-    page: 1
+    newsfeed: {
+      page: 1
+    },
+    crud: []
   }
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(combineReducers({newsfeed, crud}), initialState);
+
+  const store = useMemo(() => [state, dispatch], [state]);
 
   const getData = async () => {
     dispatch(load(true));
     try {
-      const response = await fetch(`${api.url}&page=${state.page}`);
+      const response = await fetch(`${api.url}&page=${state.newsfeed.page}`);
       const result = await response.json();
       dispatch(fetchData(result));
     } catch (error) {
@@ -26,10 +41,10 @@ const Provider = props => {
   useEffect(() => {
     getData();
     // eslint-disable-next-line
-  },[state.page])
+  },[state.newsfeed.page])
   
   return (
-    <Context.Provider value = {[state, dispatch]}>
+    <Context.Provider value = {store}>
       {props.children}
     </Context.Provider>
   );

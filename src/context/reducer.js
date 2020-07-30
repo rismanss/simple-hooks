@@ -1,6 +1,17 @@
-import {DATA, ERROR, PAGE, LOAD} from './actions';
+import {DATA, ERROR, PAGE, LOAD, ADD} from './actions';
 
-export const reducer = (state, action) => {
+export const crud = (state, action) => {
+  switch (action.type) {
+    case ADD:
+      return {
+        ...state,
+      }
+    default:
+      return state
+  }
+}
+
+export const newsfeed = (state, action) => {
   console.log(action, '...action')
   switch (action.type) {
     case DATA:
